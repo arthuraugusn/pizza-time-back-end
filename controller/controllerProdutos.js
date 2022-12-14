@@ -37,7 +37,6 @@ const novoProduto = async function(produto){
         const novoProduto = require('../model/dao/produto.js')
 
         if(produto.promocao == ''|| produto.promocao == undefined){
-            produto.promocao = 0
 
             const rsProduto = await novoProduto.insertDadosProduto(produto)
     
