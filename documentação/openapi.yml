@@ -1,0 +1,1389 @@
+openapi: 3.0.0
+info:
+  title: Pizza Time
+  description: |-
+   API feita para a Pizza Time, destinada ao controle de produtos, contato (do cliente) e usuários root (dashboard)
+  termsOfService: https://github.com/fernandoleonid/projeto-integrado-2SEM-2022
+  contact:
+    email: arthuraugusn@gmail.com
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080/v1
+paths:
+  /pizzaria/endereco:
+    post:
+      tags:
+        - Endereço
+      summary: Adiciona o endereço da pizzaria
+      description: Adiciona o endereço da pizzaria
+      requestBody:
+        description: JSON contendo os dados do endereço que será inserido no banco de dados
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Endereco'
+        required: true
+      responses:
+        '200':
+          description: operação concluida com exito
+        '400':
+          description:  Empty body error
+        '415':
+          description:  Content Type error
+    get:
+      tags:
+        - Endereço
+      summary: Lista o endereço/endereços futuros
+      description: Lista o atual ou no futuro novos endereços
+      responses:
+        '200':
+          description: operação concluida com exito
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Endereco'          
+        '404':
+          description: DataBase não encontrado
+  /v1/pizzaria/endereco/${id}:
+    get:
+      tags:
+        - Endereço
+      summary: Busca o endereço pelo ID
+      description: Retorna o endereço buscado pelo ID
+      parameters:
+        - name: id
+          in: path
+          description: ID do endereço cadastrado
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: operação concluida com exito
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Endereco'          
+        '500':
+          description: Erro interno do sistema
+        '404':
+          description:  Não encontrado
+    put:
+      tags:
+        - Endereço
+      summary: Atualizar um endereço existente
+      description: Atualizar um endereço já existente no banco de dados pelo ID
+      parameters:
+        - name: id
+          in: path
+          description: ID do endereço
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: JSON com os itens que irão ser atualizados e mantidos
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Endereco'
+        required: true
+      responses:
+        '200':
+          description: operação concluida com exito
+        '404':
+          description: Não encontrado
+        '500':
+          description: Erro interno do sistema
+    delete:
+      tags:
+        - Endereço
+      summary: Deleta um endereço
+      description: Deleta um endereço do banco de dados pelo id
+      parameters:
+        - name: id
+          in: path
+          description: ID do endereço
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: operação concluida com exito
+        '400':
+          description: ID invalido 
+        '404':
+          description: Não encontrado
+          
+  /pizzaria:
+    post:
+      tags:
+        - Pizzaria
+      summary: Adiciona os dados da pizzaria
+      description: Adiciona os dados da própria pizzaria
+      requestBody:
+        description: JSON contendo os dados da pizzaria que serão inseridos no banco de dados
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Pizzaria'
+        required: true
+      responses:
+        '200':
+          description: operação concluida com exito
+        '400':
+          description:  Empty body error
+        '415':
+          description:  Content Type error
+    get:
+      tags:
+        - Pizzaria
+      summary: Lista os dados da pizzaria
+      description: Lista a pizzaria atual cadastrada
+      responses:
+        '200':
+          description: operação concluida com exito
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Pizzaria'          
+        '404':
+          description: DataBase não encontrado
+  /v1/pizzaria/${id}:
+    get:
+      tags:
+        - Pizzaria
+      summary: Busca os dados da pizzaria pelo ID
+      description: Retorna a pizzaria buscada pelo ID
+      parameters:
+        - name: id
+          in: path
+          description: ID do endereço cadastrado
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: operação concluida com exito
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pizzaria'          
+        '500':
+          description: Erro interno do sistema
+        '404':
+          description:  Não encontrado
+    put:
+      tags:
+        - Pizzaria
+      summary: Atualizar os dados de uma pizzaria existente
+      description: Atualizar os dados de uma pizzaria já existente no banco de dados pelo ID
+      parameters:
+        - name: id
+          in: path
+          description: ID dos dados da pizzaria
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: JSON com os itens que irão ser atualizados e mantidos
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Pizzaria'
+        required: true
+      responses:
+        '200':
+          description: operação concluida com exito
+        '404':
+          description: Não encontrado
+        '500':
+          description: Erro interno do sistema
+    delete:
+      tags:
+        - Pizzaria
+      summary: Deleta uma pizzaria
+      description: Deleta os dados de uma pizzaria no banco de dados pelo id
+      parameters:
+        - name: id
+          in: path
+          description: ID dos dados da pizzaria
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: operação concluida com exito
+        '400':
+          description: ID invalido 
+        '404':
+          description: Não encontrado
+          
+  /produto:
+    post:
+      tags:
+        - Produto
+      summary: Adiciona um produto
+      description: Adiciona um novo produto (pizza ou bebida)
+      requestBody:
+        description: JSON contendo os dados da pizza ou bebida que serão inseridos no banco de dados
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Produto'
+        required: true
+      responses:
+        '200':
+          description: operação concluida com exito
+        '400':
+          description:  Empty body error
+        '415':
+          description:  Content Type error
+  /produtos:
+    get:
+      tags:
+        - Produto
+      summary: Lista todos os produtos
+      description: Lista todos os produtos que foram cadastrados no banco de dados
+      responses:
+        '200':
+          description: operação concluida com exito
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Produto'          
+        '404':
+          description: DataBase não encontrado
+  /produto/${id}:
+    get:
+      tags:
+        - Produto
+      summary: Busca um produto pelo ID
+      description: Retorna um produto buscado pelo ID
+      parameters:
+        - name: id
+          in: path
+          description: ID do produto cadastrado
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: operação concluida com exito
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Produto'          
+        '500':
+          description: Erro interno do sistema
+        '404':
+          description:  Não encontrado
+    put:
+      tags:
+        - Produto
+      summary: Atualizar um produto existente
+      description: Atualizar um produto já existente no banco de dados pelo ID
+      parameters:
+        - name: id
+          in: path
+          description: ID do produto
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: JSON com os itens que irão ser atualizados e mantidos
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Produto'
+        required: true
+      responses:
+        '200':
+          description: operação concluida com exito
+        '404':
+          description: Não encontrado
+        '500':
+          description: Erro interno do sistema
+    delete:
+      tags:
+        - Produto
+      summary: Deleta um produto
+      description: Deleta um produto do banco de dados pelo id
+      parameters:
+        - name: id
+          in: path
+          description: ID do produto
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: operação concluida com exito
+        '400':
+          description: ID invalido 
+        '404':
+          description: Não encontrado
+          
+  /pizzaria/contato/mensagem:
+    post:
+      tags:
+        - Contate-nos
+      summary: Adiciona uma mensagem
+      description: Adiciona uma mensagem de um usuário onde ele escolherá se será uma opinião ou crítica ao estabelecimento
+      requestBody:
+        description: JSON contendo os dados da mensagem que será inserida no banco de dados
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Mensagem'
+        required: true
+      responses:
+        '200':
+          description: operação concluida com exito
+        '400':
+          description:  Empty body error
+        '415':
+          description:  Content Type error
+  /pizzaria/contato/mensagens:
+    get:
+      tags:
+        - Mensagem
+      summary: Lista todas as mensagens
+      description: Lista todas as mensagens sendi críticas ou sugestões
+      responses:
+        '200':
+          description: operação concluida com exito
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Mensagem'   
+        '404':
+          description: DataBase não encontrado
+  /pizzaria/contato/mensagem/${id}:
+    get:
+      tags:
+        - Mensagem
+      summary: Busca uma mensage sendo sugestão ou crítica pelo ID
+      description: Retorna mensagem buscada pelo ID
+      parameters:
+        - name: id
+          in: path
+          description: ID da mensagem
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: operação concluida com exito
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Mensagem'  
+        '500':
+          description: Erro interno do sistema
+        '404':
+          description:  Não encontrado
+    put:
+      tags:
+        - Mensagem
+      summary: Atualizar uma mensagem já existente
+      description: Atualizar uma mensagem já existente dentro do banco de dados
+      parameters:
+        - name: id
+          in: path
+          description: ID da mensagem
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: JSON com os itens que irão ser atualizados e mantidos
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Mensagem'
+        required: true
+      responses:
+        '200':
+          description: operação concluida com exito
+        '404':
+          description: Não encontrado
+        '500':
+          description: Erro interno do sistema
+    delete:
+      tags:
+        - Mensagem
+      summary: Deleta uma mensagem
+      description: Deleta uma mensagem buscando pelo ID
+      parameters:
+        - name: id
+          in: path
+          description: ID da mensagem
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: operação concluida com exito
+        '400':
+          description: ID invalido 
+        '404':
+          description: Não encontrado
+          
+  /produto/pizza/tamanho:
+    post:
+      tags:
+        - Tamanhos
+      summary: Adiciona um tamanho
+      description: Adiciona um tamanho de pizza
+      requestBody:
+        description: Adiciona o tamanho de uma pizza no banco de dados
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Tamanho'
+        required: true
+      responses:
+        '200':
+          description: operação concluida com exito
+        '400':
+          description:  Empty body error
+        '415':
+          description:  Content Type error
+  /produtos/pizza/tamanhos:
+    get:
+      tags:
+        - Tamanhos
+      summary: Lista todos os tamanhos
+      description: Lista todos os tamahos de pizzas
+      responses:
+        '200':
+          description: operação concluida com exito
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Tamanho'   
+        '404':
+          description: DataBase não encontrado
+  /produto/pizza/tamanho/${id}:
+    get:
+      tags:
+        - Tamanhos
+      summary: Busca um tamanho pelo ID
+      description: Retorna um tamanho de uma pizza pelo ID
+      parameters:
+        - name: id
+          in: path
+          description: ID da mensagem
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: operação concluida com exito
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tamanho' 
+        '500':
+          description: Erro interno do sistema
+        '404':
+          description:  Não encontrado
+    put:
+      tags:
+        - Tamanhos
+      summary: Atualiza um tamanho
+      description: Atualizar o tamanho de uma piza já inserida no banco de dados
+      parameters:
+        - name: id
+          in: path
+          description: ID do tamanho
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: JSON com os itens que irão ser atualizados e mantidos
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Tamanho'
+        required: true
+      responses:
+        '200':
+          description: operação concluida com exito
+        '404':
+          description: Não encontrado
+        '500':
+          description: Erro interno do sistema
+    delete:
+      tags:
+        - Tamanhos
+      description: Deleta um tamanho pelo ID
+      parameters:
+        - name: id
+          in: path
+          description: ID do tamanho
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: operação concluida com exito
+        '400':
+          description: ID invalido 
+        '404':
+          description: Não encontrado
+          
+  /produto/bebida/tamanho:
+    post:
+      tags:
+        - Tamanhos
+      summary: Adiciona um tamanho
+      description: Adiciona um tamanho de bebida
+      requestBody:
+        description: Adiciona o tamanho de uma bebida no banco de dados
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Tamanho'
+        required: true
+      responses:
+        '200':
+          description: operação concluida com exito
+        '400':
+          description:  Empty body error
+        '415':
+          description:  Content Type error
+  /produtos/bebida/tamanhos:
+    get:
+      tags:
+        - Tamanhos
+      summary: Lista todos os tamanhos
+      description: Lista todos os tamahos de bebidas
+      responses:
+        '200':
+          description: operação concluida com exito
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Tamanho'   
+        '404':
+          description: DataBase não encontrado
+  /produto/bebida/tamanho/${id}:
+    get:
+      tags:
+        - Tamanhos
+      summary: Busca um tamanho pelo ID
+      description: Retorna um tamanho de uma bebida pelo ID
+      parameters:
+        - name: id
+          in: path
+          description: ID da bebida
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: operação concluida com exito
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tamanho' 
+        '500':
+          description: Erro interno do sistema
+        '404':
+          description:  Não encontrado
+    put:
+      tags:
+        - Tamanhos
+      summary: Atualiza um tamanho
+      description: Atualizar o tamanho de uma bebida já inserida no banco de dados
+      parameters:
+        - name: id
+          in: path
+          description: ID do tamanho
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: JSON com os itens que irão ser atualizados e mantidos
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Tamanho'
+        required: true
+      responses:
+        '200':
+          description: operação concluida com exito
+        '404':
+          description: Não encontrado
+        '500':
+          description: Erro interno do sistema
+    delete:
+      tags:
+        - Tamanhos
+      summary: Deleta um tamanho
+      description: Deleta um tamanho de uma bebida pelo ID
+      parameters:
+        - name: id
+          in: path
+          description: ID do tamanho
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: operação concluida com exito
+        '400':
+          description: ID invalido 
+        '404':
+          description: Não encontrado
+          
+  /produto/pizza/tipo:
+    post:
+      tags:
+        - Tipos
+      summary: Adiciona um tipo
+      description: Adiciona um tipo de pizza
+      requestBody:
+        description: Adiciona o tipo de uma pizza no banco de dados
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Tipo'
+        required: true
+      responses:
+        '200':
+          description: operação concluida com exito
+        '400':
+          description:  Empty body error
+        '415':
+          description:  Content Type error
+  /produtos/pizza/tipos:
+    get:
+      tags:
+        - Tipos
+      summary: Lista todos os tipos
+      description: Lista todos os tipos de pizzas
+      responses:
+        '200':
+          description: operação concluida com exito
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Tipo'   
+        '404':
+          description: DataBase não encontrado
+  /produto/pizza/tipo/${id}:
+    get:
+      tags:
+        - Tipos
+      summary: Busca um tipo pelo ID
+      description: Retorna um tipo de uma pizza pelo ID
+      parameters:
+        - name: id
+          in: path
+          description: ID do tipo
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: operação concluida com exito
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tamanho' 
+        '500':
+          description: Erro interno do sistema
+        '404':
+          description:  Não encontrado
+    put:
+      tags:
+        - Tipos
+      summary: Atualiza um tipo
+      description: Atualizar o tipo de uma pizza já inserida no banco de dados
+      parameters:
+        - name: id
+          in: path
+          description: ID do tipo
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: JSON com os itens que irão ser atualizados e mantidos
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Tipo'
+        required: true
+      responses:
+        '200':
+          description: operação concluida com exito
+        '404':
+          description: Não encontrado
+        '500':
+          description: Erro interno do sistema
+    delete:
+      tags:
+        - Tipos
+      summary: Deleta um tipo
+      description: Deleta um tipo pelo ID
+      parameters:
+        - name: id
+          in: path
+          description: ID do tipo
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: operação concluida com exito
+        '400':
+          description: ID invalido 
+        '404':
+          description: Não encontrado
+          
+  /produto/bebida/tipo:
+    post:
+      tags:
+        - Tipos
+      summary: Adiciona um tipo
+      description: Adiciona um tipo de bebida
+      requestBody:
+        description: Adiciona o tipo de uma bebida no banco de dados
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Tipo'
+        required: true
+      responses:
+        '200':
+          description: operação concluida com exito
+        '400':
+          description:  Empty body error
+        '415':
+          description:  Content Type error
+  /produtos/bebida/tpos:
+    get:
+      tags:
+        - Tipos
+      summary: Lista todos os tipos
+      description: Lista todos os tipos de bebidas
+      responses:
+        '200':
+          description: operação concluida com exito
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Tipo'   
+        '404':
+          description: DataBase não encontrado
+  /produto/bebida/tipo/${id}:
+    get:
+      tags:
+        - Tipos
+      summary: Busca um tipo pelo ID
+      description: Retorna um tipo de uma bebida pelo ID
+      parameters:
+        - name: id
+          in: path
+          description: ID do tipo
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: operação concluida com exito
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tipo' 
+        '500':
+          description: Erro interno do sistema
+        '404':
+          description:  Não encontrado
+    put:
+      tags:
+        - Tipos
+      summary: Atualiza um tipo
+      description: Atualizar o tipo de uma bebida já inserida no banco de dados
+      parameters:
+        - name: id
+          in: path
+          description: ID do tipo
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: JSON com os itens que irão ser atualizados e mantidos
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Tipo'
+        required: true
+      responses:
+        '200':
+          description: operação concluida com exito
+        '404':
+          description: Não encontrado
+        '500':
+          description: Erro interno do sistema
+    delete:
+      tags:
+        - Tipos
+      summary: Deleta um tipo
+      description: Deleta um tipo de uma bebida pelo ID
+      parameters:
+        - name: id
+          in: path
+          description: ID do tpo
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: operação concluida com exito
+        '400':
+          description: ID invalido 
+        '404':
+          description: Não encontrado
+          
+  /produto/pizza:
+    post:
+      tags:
+        - Pizzas
+      summary: Adiciona uma pizza
+      description: Adiciona uma pizza usando das tabelas intermediárias
+      requestBody:
+        description: Adiciona uma pizza no banco de dados
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Pizza'
+        required: true
+      responses:
+        '200':
+          description: operação concluida com exito
+        '400':
+          description:  Empty body error
+        '415':
+          description:  Content Type error
+  /produtos/pizzas:
+    get:
+      tags:
+        - Pizza
+      summary: Lista todas as pizzas
+      description: Lista todas as bebidas juntando as tabelas intermedárias
+      responses:
+        '200':
+          description: operação concluida com exito
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Pizza'   
+        '404':
+          description: DataBase não encontrado
+  /produto/pizza/${id}:
+    get:
+      tags:
+        - Pizzas
+      summary: Busca uma pizza pelo ID
+      description: Retorna uma pizza especifica pelo ID
+      parameters:
+        - name: id
+          in: path
+          description: ID da pizza
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: operação concluida com exito
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pizza' 
+        '500':
+          description: Erro interno do sistema
+        '404':
+          description:  Não encontrado
+    put:
+      tags:
+        - Pizzas
+      summary: Atualiza uma pizza
+      description: Atualizar uma pizza já inserida no banco de dados
+      parameters:
+        - name: id
+          in: path
+          description: ID da pizza
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: JSON com os itens que irão ser atualizados e mantidos
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Pizza'
+        required: true
+      responses:
+        '200':
+          description: operação concluida com exito
+        '404':
+          description: Não encontrado
+        '500':
+          description: Erro interno do sistema
+    delete:
+      tags:
+        - Pizzas
+      summary: Deleta uma pizza
+      description: Deleta uma pelo ID
+      parameters:
+        - name: id
+          in: path
+          description: ID da pizza
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: operação concluida com exito
+        '400':
+          description: ID invalido 
+        '404':
+          description: Não encontrado
+          
+  /produto/bebida:
+    post:
+      tags:
+        - Bebida
+      summary: Adiciona uma bebida
+      description: Adiciona uma bebida usando das tabelas intermediárias
+      requestBody:
+        description: Adiciona uma bebida no banco de dados
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Bebida'
+        required: true
+      responses:
+        '200':
+          description: operação concluida com exito
+        '400':
+          description:  Empty body error
+        '415':
+          description:  Content Type error
+  /produtos/bebidas:
+    get:
+      tags:
+        - Bebida
+      summary: Lista todas as bebidas
+      description: Lista todas as bebidas juntando as tabelas intermedárias
+      responses:
+        '200':
+          description: operação concluida com exito
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Bebida'   
+        '404':
+          description: DataBase não encontrado
+  /produto/bebida/${id}:
+    get:
+      tags:
+        - Bebidas
+      summary: Busca uma bebida pelo ID
+      description: Retorna uma bebida especifica pelo ID
+      parameters:
+        - name: id
+          in: path
+          description: ID da bebida
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: operação concluida com exito
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Bebida' 
+        '500':
+          description: Erro interno do sistema
+        '404':
+          description:  Não encontrado
+    put:
+      tags:
+        - Bebida
+      summary: Atualiza uma bebida
+      description: Atualizar uma bebida já inserida no banco de dados
+      parameters:
+        - name: id
+          in: path
+          description: ID da bebida
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: JSON com os itens que irão ser atualizados e mantidos
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Bebida'
+        required: true
+      responses:
+        '200':
+          description: operação concluida com exito
+        '404':
+          description: Não encontrado
+        '500':
+          description: Erro interno do sistema
+    delete:
+      tags:
+        - Bebida
+      summary: Deleta uma bebida
+      description: Deleta uma bebida pelo ID
+      parameters:
+        - name: id
+          in: path
+          description: ID da pizza
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: operação concluida com exito
+        '400':
+          description: ID invalido 
+        '404':
+          description: Não encontrado
+          
+  /pizzaria/admin/usuario:
+    post:
+      tags:
+        - Adm
+      summary: Adiciona um usuário novo
+      description: Adiciona um usuário
+      requestBody:
+        description: Adiciona um usuário no banco de dados
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UsuarioRoot'
+        required: true
+      responses:
+        '200':
+          description: operação concluida com exito
+        '400':
+          description:  Empty body error
+        '415':
+          description:  Content Type error
+  /pizzaria/admin/usuario/autenticar:
+    post:
+      tags:
+        - Adm
+      summary: Autentica um usuário
+      description: Autentica um usuário
+      requestBody:
+        description: Autentica um usuário usando o banco de dados e criptografia md5
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UsuarioRoot'
+        required: true
+      responses:
+        '200':
+          description: operação concluida com exito
+        '400':
+          description:  Empty body error
+        '415':
+          description:  Content Type error
+  /pizzaria/admin/usuarios:
+    get:
+      tags:
+        - Adm
+      summary: Lista todos os usuários
+      description: Lista todos os usuários cadastrados no banco de dados
+      responses:
+        '200':
+          description: operação concluida com exito
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UsuarioRoot'   
+        '404':
+          description: DataBase não encontrado
+  /pizzaria/admin/usuario/${id}:
+    get:
+      tags:
+        - Adm
+      summary: Busca um usuário pelo ID
+      description: Retorna um usuários especificado pelo ID
+      parameters:
+        - name: id
+          in: path
+          description: ID do usuário
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: operação concluida com exito
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsuarioRoot' 
+        '500':
+          description: Erro interno do sistema
+        '404':
+          description:  Não encontrado
+    put:
+      tags:
+        - Adm
+      summary: Atualiza um usuário
+      description: Atualizar uum usuário já inserido no banco de dados pelo ID
+      parameters:
+        - name: id
+          in: path
+          description: ID do usuário
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: JSON com os itens que irão ser atualizados e mantidos
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UsuarioRoot'
+        required: true
+      responses:
+        '200':
+          description: operação concluida com exito
+        '404':
+          description: Não encontrado
+        '500':
+          description: Erro interno do sistema
+    delete:
+      tags:
+        - Adm
+      summary: Deleta um usuário
+      description: Deleta um usuário especificado pelo ID
+      parameters:
+        - name: id
+          in: path
+          description: ID do usuário
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: operação concluida com exito
+        '400':
+          description: ID invalido 
+        '404':
+          description: Não encontrado
+          
+components:
+  schemas:
+    Produto:
+      required:
+        - preco,
+        - foto,
+        - nome,
+        - descricao,
+        - id_pizzaria
+      type: object
+      properties:
+        id:
+          type: integer
+        nome:
+          type: string
+        preco:
+          type: number
+        foto:
+          type: string
+        descricao:
+          type: string
+        id_pizzaria:
+          type: integer
+          
+    Endereco:
+      required:
+        - rua,
+        - numero,
+        - cep,
+        - uf,
+        - cidade
+      type: object
+      properties:
+        id:
+          type: integer
+        rua:
+          type: string
+        numero:
+          type: number
+        cep:
+          type: string
+        uf:
+          type: string
+        cidade:
+          type: string
+          
+    Pizzaria:
+      required:
+        - nome,
+        - cnpj,
+        - telefone,
+        - celular,
+        - id_endereco_pizzaria
+      type: object
+      properties:
+        id:
+          type: integer
+        nome:
+          type: string
+        cnpj:
+          type: string
+        telefone:
+          type: string
+        celular:
+          type: string
+        id_endereco_pizzaria:
+          type: number
+          
+    Mensagem:
+      required:
+        - mensagem,
+        - op_sugestao_critica
+      type: object
+      properties:
+        id:
+          type: integer
+        nome:
+          type: string
+        mensagem:
+          type: string
+        op-sugestao_critica:
+          type: integer
+        email:
+          type: string
+          
+    Tamanho:
+      required:
+        - tamanho
+      type: object
+      properties:
+        id:
+          type: integer
+        tamanho:
+          type: string
+          
+    Tipo:
+      required:
+        - tipo
+      type: object
+      properties:
+        id:
+          type: integer
+        tipo:
+          type: string
+          
+    Pizza:
+      required:
+        - id_tipo_pizza,
+        - id_tamanho_pizza
+      type: object
+      properties:
+        id:
+          type: integer
+        id_tipo_pizza:
+          type: string
+        id_tamanho_pizza:
+          type: string
+          
+    Bebida:
+      required:
+        - id_tipo_bebida,
+        - id_tamanho_bebida
+      type: object
+      properties:
+        id:
+          type: integer
+        id_tipo_bebida:
+          type: string
+        id_tamanho_bebida:
+          type: string
+          
+    UsuarioRoot:
+      required:
+        - nome,
+        - login,
+        - senha,
+        - email
+      type: object
+      properties:
+        id:
+          type: integer
+        nome:
+          type: string
+        login:
+          type: string
+        senha:
+          type: string
+        email:
+          type: string
+       
